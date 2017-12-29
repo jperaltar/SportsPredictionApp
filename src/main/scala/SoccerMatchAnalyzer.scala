@@ -16,7 +16,7 @@ object SoccerMatchAnalyzer {
       .option("header", "true")
       .option("delimiter", ",")
       .csv(fileName)
-    new SoccerStats(df)
+    new SoccerStats(df, sparkSession, sc)
   }
 
   def main(args: Array[String]): Unit = {
