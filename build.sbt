@@ -10,6 +10,8 @@ libraryDependencies ++= {
   Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion,
     "org.apache.spark" %% "spark-streaming" % sparkVersion,
-    "org.apache.spark" %% "spark-sql" % sparkVersion
+    "org.apache.spark" %% "spark-sql" % sparkVersion,
+    "org.json4s" %% "json4s-jackson" % "{latestVersion}",
+    "org.json4s" %% "json4s-native" % "{latestVersion}"
   )
 }
