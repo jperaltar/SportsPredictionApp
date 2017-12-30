@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
-import stats.SportsStats.SoccerStats
+import soccer.SoccerStats
 
 object SoccerMatchAnalyzer {
   private val APP_NAME = "Sports Bets App"
