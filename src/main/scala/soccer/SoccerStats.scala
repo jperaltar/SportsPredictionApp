@@ -30,11 +30,13 @@ class SoccerStats(var dataFrame: DataFrame, sparkSession: SparkSession, sparkCon
 
     val columns = List("match_id", "team", "ball_control", "shots", "shots_on_goal", "deflected_shots", "shots_out",
       "offsides", "corners", "saves", "fouls", "yellow_cards", "red_cards")
-    val teamStats = dataFrame.select("id", "team_home", "local")
-    val processedTeamStats = teamStats.filter(!udfIsEmptyMap(col("local"))).rdd.map { row =>
-      val statsMap = row.getAs("local").asInstanceOf[Map[String, String]]
-      val infoMap = Map("match_id" -> row.getAs("id"), "team" -> row.getAs("team_home"))
-      infoMap ++ statsMap
+    val teamStats = dataFrame.select("id", "team_home", "team_away", "local", "away")
+    val processedTeamStats = teamStats.filter(!udfIsEmptyMap(col("local"))).rdd.flatMap { row =>
+      val localStatsMap = row.getAs("local").asInstanceOf[Map[String, String]]
+      val awayStatsMap = row.getAs("away").asInstanceOf[Map[String, String]]
+      val localInfoMap = Map("match_id" -> row.getAs("id"), "team" -> row.getAs("team_home"))
+      val awayInfoMap = Map("match_id" -> row.getAs("id"), "team" -> row.getAs("team_away"))
+      Seq(localInfoMap ++ localStatsMap, awayInfoMap ++ awayStatsMap)
     }
 
     import sparkSession.implicits._
