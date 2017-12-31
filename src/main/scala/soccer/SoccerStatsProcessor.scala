@@ -1,5 +1,7 @@
 package soccer
 
+import java.util.UUID
+
 import helpers.DataframeHelper.{udfCorrectJsonString, udfIsJsonString, udfJsonStrToMap}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
@@ -34,7 +36,10 @@ object SoccerStatsProcessor {
   }
 
   def preProcess(dataFrame: DataFrame): DataFrame = {
-    dataFrame.withColumn("league", split(col("season"), "-")(0))
+    val generateUUID = udf(() => UUID.randomUUID().toString)
+
+    dataFrame.withColumn("id", generateUUID())
+      .withColumn("league", split(col("season"), "-")(0))
       .withColumn("season_start_year", split(col("season"), "-")(1).cast(IntegerType))
       .withColumn("season_end_year", split(col("season"), "-")(2).cast(IntegerType))
       .drop("season")
